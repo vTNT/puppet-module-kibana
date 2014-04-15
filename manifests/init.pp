@@ -1,7 +1,10 @@
 class kibana (
     $home_path = "/usr/local/nginx/conf/vhost",
     $vhost_conf = "/usr/local/nginx/conf/vhost/kibana.conf",
+    $htpasswdfile = "/usr/local/nginx/conf/vhost/kibana.htpasswd",
     $vhost = "kibana.xx.com",
+    $htpassuser = "root",
+    $htpasspwd  = "xxx",
 ) {
 
     file {$home_path:
@@ -9,6 +12,12 @@ class kibana (
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
+    }
+
+    htpasswd {$htpassuser:
+        cryptpasswd => $htpasspwd,
+        target      => $htpasswdfile,
+        require => file[$home_path],
     }
 
     file {"kibana_vhost":
